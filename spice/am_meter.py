@@ -1,3 +1,4 @@
+# PySpice example code
 import PySpice.Logging.Logging as Logging
 from PySpice.Spice.Netlist import Circuit
 from PySpice.Unit import *

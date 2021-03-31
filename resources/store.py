@@ -1,3 +1,4 @@
+# template
 from flask_restful import Resource
 from models.store import StoreModel
 from schemas.store import StoreSchema

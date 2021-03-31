@@ -1,3 +1,4 @@
+# PySpice example code
 import matplotlib.pyplot as plt
 import numpy as np
 import PySpice.Logging.Logging as Logging

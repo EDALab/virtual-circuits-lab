@@ -1,3 +1,4 @@
+# template
 from flask_restful import Resource
 from flask import request
 from werkzeug.security import safe_str_cmp

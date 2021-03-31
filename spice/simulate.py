@@ -10,7 +10,7 @@ from PySpice.Tools.Path import parent_directory_of
 import numpy as np
 
 
-def calculate_voltage(circuit, node1, node2):
+def calculate_voltage(circuit, node1, node2):  # calculate DC voltage
     simulator = circuit.simulator(temperature=25, nominal_temperature=25)
     try:
         analysis = simulator.operating_point()
@@ -22,7 +22,7 @@ def calculate_voltage(circuit, node1, node2):
         return {"message": "Invalid circuit simulation, " + str(e)}, 400
 
 
-def calculate_amp(circuit, ammeter):
+def calculate_amp(circuit, ammeter):  # calculate DC current
     am_name = "v" + str(ammeter["id"])
     simulator = circuit.simulator(temperature=25, nominal_temperature=25)
     try:
@@ -33,7 +33,7 @@ def calculate_amp(circuit, ammeter):
         return {"message": "Invalid circuit simulation, " + str(e)}, 400
 
 
-def display_voltage(circuit, node1, node2, time_interval, step_size):
+def display_voltage(circuit, node1, node2, time_interval, step_size):  # calculate AC voltage
     simulator = circuit.simulator(temperature=25, nominal_temperature=25)
     try:
         analysis = simulator.transient(step_time=step_size, end_time=time_interval)
@@ -45,7 +45,7 @@ def display_voltage(circuit, node1, node2, time_interval, step_size):
         return {"message": "Invalid circuit simulation, " + str(e)}, 400
 
 
-def display_amp(circuit, ammeter, time_interval, step_size):
+def display_amp(circuit, ammeter, time_interval, step_size):  # calculate AC current
     am_name = "v" + str(ammeter["id"])
     simulator = circuit.simulator(temperature=25, nominal_temperature=25)
     try:
@@ -72,6 +72,8 @@ class Simulator:
         logger = Logging.setup_logging()
         circuit_lab = self.circuit
         circuit = Circuit(circuit_lab["name"])
+
+        # for complex circuit elements that requires SPICE library
         # libraries_path = find_libraries()
 
         python_file = os.path.abspath(sys.argv[0])
@@ -79,6 +81,8 @@ class Simulator:
         libraries_path = os.path.join(examples_root, 'libraries')
 
         spice_library = SpiceLibrary(libraries_path)
+
+        # return message
         message = ""
 
         # add all elements to the PySpice circuit
@@ -203,6 +207,7 @@ class Simulator:
                     except KeyError as e:
                         message += " " + str(e)
 
+            # add ammeter as a 0 volt voltage source
             elif element == "AM":
                 for ammeter in circuit_lab["AM"]:
                     circuit.V(ammeter["id"],
@@ -215,7 +220,7 @@ class Simulator:
             return message
         return "Undefined model type:" + message
 
-    def circuit_op(self):
+    def circuit_op(self):  # for DC (static) simulation requests
         circuit_lab = self.circuit
         circuit = self.spice
         volt_output = []
@@ -243,7 +248,7 @@ class Simulator:
         print(message)
         return message, 201
 
-    def circuit_runtime(self, time_interval, step_size):
+    def circuit_runtime(self, time_interval, step_size):  # for AC (dynamic) simulation requests
         circuit_lab = self.circuit
         circuit = self.spice
         volt_output = []

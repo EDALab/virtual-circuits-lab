@@ -1,3 +1,4 @@
+# PySpice example code
 import PySpice.Logging.Logging as Logging
 from PySpice.Doc.ExampleTools import find_libraries
 from PySpice.Probe.Plot import plot

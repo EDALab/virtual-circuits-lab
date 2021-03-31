@@ -1,3 +1,4 @@
+# template
 # from marshmallow import Schema, fields
 from ma import ma
 from models.user import UserModel

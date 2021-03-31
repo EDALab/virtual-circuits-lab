@@ -1,3 +1,4 @@
+# template
 from db import db
 
 

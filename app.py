@@ -12,6 +12,9 @@ from resources.store import Store, StoreList
 from resources.simulate import StaticSimulator, DynamicSimulator
 
 app = Flask(__name__)
+
+# ---------template for setting up the authorization levels---------
+
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["PROPAGATE_EXCEPTIONS"] = True
@@ -21,8 +24,12 @@ app.config["JWT_BLACKLIST_TOKEN_CHECKS"] = [
     "refresh",
 ]  # allow blacklisting for access and refresh tokens
 app.secret_key = "jose"  # could do app.config['JWT_SECRET_KEY'] if we prefer
+
+# ----------------------------create app----------------------------
 api = Api(app)
 
+
+# ---------template for setting up the authorization levels---------
 
 @app.before_first_request
 def create_tables():
@@ -53,10 +60,13 @@ api.add_resource(User, "/user/<int:user_id>")
 api.add_resource(UserLogin, "/login")
 api.add_resource(TokenRefresh, "/refresh")
 api.add_resource(UserLogout, "/logout")
+
+# ----------------------------create app----------------------------
+
 api.add_resource(StaticSimulator, "/static_simulator/<string:name>")
 api.add_resource(DynamicSimulator, "/dynamic_simulator/<string:name>")
 
 if __name__ == "__main__":
     db.init_app(app)
-    ma.init_app(app) # tell that marshmallow object what app it should be talking to
+    ma.init_app(app)  # tell that marshmallow object what app it should be talking to
     app.run(port=5000, debug=True)
