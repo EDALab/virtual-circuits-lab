@@ -185,10 +185,10 @@ class Simulator:
                         circuit.include(spice_library[NMOS["modelType"]])
                         # nodes are: drain, gate, source, bulk
                         circuit.MOSFET(NMOS["id"],
-                                       circuit.gnd if NMOS["node1"] == "gnd" else NMOS["node1"],
+                                       circuit.gnd if NMOS["node4"] == "gnd" else NMOS["node4"],
                                        circuit.gnd if NMOS["node2"] == "gnd" else NMOS["node2"],
                                        circuit.gnd if NMOS["node3"] == "gnd" else NMOS["node3"],
-                                       circuit.gnd if NMOS["node4"] == "gnd" else NMOS["node4"],
+                                       circuit.gnd if NMOS["node1"] == "gnd" else NMOS["node1"],
                                        model=NMOS["modelType"])
                     except KeyError as e:
                         message += " " + str(e)
@@ -199,9 +199,9 @@ class Simulator:
                         circuit.include(spice_library[PMOS["modelType"]])
                         # nodes are: source, gate, drain, bulk
                         circuit.MOSFET(PMOS["id"],
-                                       circuit.gnd if PMOS["node1"] == "gnd" else PMOS["node3"],
+                                       circuit.gnd if PMOS["node1"] == "gnd" else PMOS["node1"],
                                        circuit.gnd if PMOS["node2"] == "gnd" else PMOS["node2"],
-                                       circuit.gnd if PMOS["node3"] == "gnd" else PMOS["node1"],
+                                       circuit.gnd if PMOS["node3"] == "gnd" else PMOS["node3"],
                                        circuit.gnd if PMOS["node4"] == "gnd" else PMOS["node4"],
                                        model=PMOS["modelType"])
                     except KeyError as e:
