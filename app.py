@@ -2,6 +2,7 @@ from flask import Flask, jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from marshmallow import ValidationError
+from flask_cors import CORS
 
 from ma import ma
 from db import db
@@ -12,6 +13,7 @@ from resources.store import Store, StoreList
 from resources.simulate import StaticSimulator, DynamicSimulator
 
 app = Flask(__name__)
+CORS(app)
 
 # ---------template for setting up the authorization levels---------
 
@@ -46,7 +48,7 @@ jwt = JWTManager(app)
 
 
 # This method will check if a token is blacklisted, and will be called automatically when blacklist is enabled
-@jwt.token_in_blacklist_loader
+# @jwt.token_in_blacklist_loader
 def check_if_token_in_blacklist(decrypted_token):
     return decrypted_token["jti"] in BLACKLIST
 
