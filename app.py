@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from flask_restful import Api
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import JWTManager 
 from marshmallow import ValidationError
 from flask_cors import CORS
 
@@ -11,6 +11,7 @@ from resources.user import UserRegister, UserLogin, User, TokenRefresh, UserLogo
 from resources.item import Item, ItemList
 from resources.store import Store, StoreList
 from resources.simulate import StaticSimulator, DynamicSimulator
+from resources.subckt import SubCktGenerator
 
 app = Flask(__name__)
 CORS(app)
@@ -67,6 +68,9 @@ api.add_resource(UserLogout, "/logout")
 
 api.add_resource(StaticSimulator, "/static_simulator/<string:name>")
 api.add_resource(DynamicSimulator, "/dynamic_simulator/<string:name>")
+
+# Subcircuit
+api.add_resource(SubCktGenerator, "/subcircuit")
 
 if __name__ == "__main__":
     db.init_app(app)
