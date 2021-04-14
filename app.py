@@ -9,7 +9,7 @@ from blacklist import BLACKLIST
 from resources.user import UserRegister, UserLogin, User, TokenRefresh, UserLogout
 from resources.item import Item, ItemList
 from resources.store import Store, StoreList
-from resources.simulate import StaticSimulator, DynamicSimulator
+from resources.simulate import StaticSimulator, TransientSimulator
 
 app = Flask(__name__)
 
@@ -64,7 +64,7 @@ api.add_resource(UserLogout, "/logout")
 # ----------------------------create app----------------------------
 
 api.add_resource(StaticSimulator, "/static_simulator/<string:name>")
-api.add_resource(DynamicSimulator, "/dynamic_simulator/<string:name>")
+api.add_resource(TransientSimulator, "/transient_simulator/<string:name>")
 
 if __name__ == "__main__":
     db.init_app(app)

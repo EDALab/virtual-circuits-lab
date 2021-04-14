@@ -20,7 +20,7 @@ class StaticSimulator(Resource):
         return output[0], output[1]
 
 
-class DynamicSimulator(Resource):
+class TransientSimulator(Resource):
 
     @classmethod
     def post(cls, name: str):
