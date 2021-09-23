@@ -8,12 +8,7 @@ verify_ssl = true
 [packages]
 pyspice = "*"
 flask = "*"
-flask-sqlalchemy = "*"
 flask-restful = "*"
-flask-jwt-extended = "*"
-marshmallow = "*"
-flask-marshmallow = "*"
-marshmallow-sqlalchemy = "*"
 flask-cors = "*"
 
 [requires]
