@@ -19,7 +19,7 @@ class SubCktGenerator(Resource):
         subcircuit_objects.add(subcircuit_obj)
 
         print("Method called from SubCktGenerator in Resources")
-        return "Successful", 200
+        return "Successful", 201
 
     # What do we need to store of a subcircuit?
     # - Name
