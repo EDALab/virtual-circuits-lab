@@ -13,4 +13,4 @@ class SubCktGenerator(Resource):
         print(subcircuit)
 
         print("Method called from SubCktGenerator in Resources")
-        return "Successful", 200
+        return "Successful", 201
