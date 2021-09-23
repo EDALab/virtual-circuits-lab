@@ -2,8 +2,13 @@ import PySpice.Logging.Logging as Logging
 from PySpice.Spice.Netlist import Circuit, SubCircuit
 from PySpice.Unit import *
 
+# This is a class that breaks down a JSON and creates a Subcircuit netlist.
+# This class uses PySpice to create the netlist. This class can be used to be used for simulations.
+# There should be a database query in here.
 class SubCkt(SubCircuit):
 
+    # Change constructor to take in name as parameter
+    # Remove line 15 that searches for components. Components will now be directly passed in as a value to the constructor
     def __init__(self, subcircuit_json):
         self.__name__ = subcircuit_json["name"]
         # Get components that make up subcircuit 
