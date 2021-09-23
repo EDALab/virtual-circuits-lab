@@ -3,6 +3,7 @@ from flask_restful import Api
 from flask_cors import CORS 
 
 from resources.simulate import StaticSimulator, TransientSimulator
+from resources.subckt import SubCktGenerator
 
 app = Flask(__name__)
 CORS(app)
