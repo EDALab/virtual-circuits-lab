@@ -13,5 +13,8 @@ api = Api(app)
 api.add_resource(StaticSimulator, "/static_simulator/<string:name>")
 api.add_resource(TransientSimulator, "/transient_simulator/<string:name>")
 
+# Subcircuit
+api.add_resource(SubCktGenerator, "/subcircuit")
+
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
