@@ -9,7 +9,6 @@ import sys
 from PySpice.Tools.Path import parent_directory_of
 import numpy as np
 from spice.subckt import SubCkt
-import resources.subckt as resources_subcircuit
 
 
 def calculate_voltage(circuit, node1, node2):  # calculate DC voltage
@@ -218,29 +217,30 @@ class Simulator:
                               ammeter["value"] @ u_V)
 
             elif element == "X":
-                # Step 1: query the database using name
-                # Step 2: call Subckt passing in the list of components to make the netlist
-                # Step 3: then simulate the circuit... like circuit.X(anything, "name", input, output)
-                #                                      (look at line 131 in experiment.py)
-                subcircuit_name = element["name"]
+                # # Step 1: query the database using name
+                # # Step 2: call Subckt passing in the list of components to make the netlist
+                # # Step 3: then simulate the circuit... like circuit.X(anything, "name", input, output)
+                # #                                      (look at line 131 in experiment.py)
+                # subcircuit_name = element["name"]
 
-                subcircuit_components = None
-                for x in resources_subcircuit.subcircuit_objects:
-                    if x.name == subcircuit_name:
-                        subcircuit_components = x.subcircuit_components 
-                        break
+                # subcircuit_components = None
+                # for x in resources_subcircuit.subcircuit_objects:
+                #     if x.name == subcircuit_name:
+                #         subcircuit_components = x.subcircuit_components 
+                #         break
                 
-                # Change constructor to take in name of subcircuit
-                subcircuit_netlist = SubCkt(subcircuit_components)
-                # check if netlist was previously made (somehow)
-                circuit.subcircuit(subcircuit_netlist)
+                # # Change constructor to take in name of subcircuit
+                # subcircuit_netlist = SubCkt(subcircuit_components)
+                # # check if netlist was previously made (somehow)
+                # circuit.subcircuit(subcircuit_netlist)
 
-                # expect to get input_node and output_node values for the element (subcircuit) from the frontend dude and dudet.
-                circuit.X(element["id"], subcircuit_name, element.input_node, element.output_node)
+                # # expect to get input_node and output_node values for the element (subcircuit) from the frontend dude and dudet.
+                # circuit.X(element["id"], subcircuit_name, element.input_node, element.output_node)
                 
-                # Sanity reason. Gotta go though. 
+                # # Sanity reason. Gotta go though. 
+                # pass
+                # # This is a placeholder for a subcircuit element. This will be mapped to spice\subckt.py
                 pass
-                # This is a placeholder for a subcircuit element. This will be mapped to spice\subckt.py
 
         if not message:
             self.spice = circuit
