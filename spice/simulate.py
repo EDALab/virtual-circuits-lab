@@ -221,16 +221,16 @@ class Simulator:
 
             elif element == "X":
                 for subcircuit in circuit_lab["X"]:
-
-                    subckt_name = subcircuit["name"]
                     
+                    subckt_name = subcircuit["name"]
+                    # Get subcircuit template document to get subcircuit components
                     subckt_temp = subcircuit_templates_collection.find({"subcircuit_name": subckt_name})[0]
                     subckt_components = SubcircuitTemplate.from_dict(subckt_temp).components
-
+                    # Generate netlist using list of components 
                     subckt_netlist = SubCkt(subckt_name, subckt_components)
-
+                    # Declare subcircuit netlist to main circuit simulation netlist 
                     circuit.subcircuit(subckt_netlist)
-
+                    
                     circuit.X(subcircuit["id"], subckt_name, subcircuit["node1"], subcircuit["node2"])
 
         print(circuit)
