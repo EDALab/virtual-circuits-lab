@@ -11,13 +11,15 @@ class SubCktGenerator(Resource):
     def post(cls):
         subcircuit_json = request.get_json()
 
+        print(subcircuit_json)
+
         # Check for duplicate subcircuit
         if subcircuit_templates_collection.find({"subcircuit_name": subcircuit_json["name"]}).count():
             return f"Subcircuit with name {subcircuit_json['name']} already exists", 400
 
         # Create subcircuit template to persist in database
         subcircuit_template = SubcircuitTemplate(
-            subcircuit_json["name"], subcircuit_json["partType"], subcircuit_json["isBlackBox"], subcircuit_json["components"], subcircuit_json["connect"])
+            subcircuit_json["name"], subcircuit_json["partType"], subcircuit_json["isBlackBox"], subcircuit_json["components"], subcircuit_json["connect"], subcircuit_json["portIdentifiersMap"])
         
         # Save subcircuit template to database
         subcircuit_templates_collection.insert_one(subcircuit_template.to_dict())

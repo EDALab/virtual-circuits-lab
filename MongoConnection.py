@@ -7,3 +7,4 @@ db = client.virtualCircuitLab
 
 # Subcircuit collection ref
 subcircuit_templates_collection = db["subcircuitTemplates"]
+specific_subcircuit_collection = db["specificSubcircuit"]
