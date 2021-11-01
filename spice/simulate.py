@@ -71,7 +71,7 @@ class Simulator:
     def get_spice(self):
         return self.spice
 
-    def define_circuit(self):
+    def define_circuit(self, verbose=False):
         logger = Logging.setup_logging()
         circuit_lab = self.circuit
         circuit = Circuit(circuit_lab["name"])
@@ -233,7 +233,9 @@ class Simulator:
                     
                     circuit.X(subcircuit["id"], subckt_name, subcircuit["node1"], subcircuit["node2"])
 
-        print(circuit)
+        if verbose:
+            print("Circuit Netlist:")
+            print(circuit)
 
         if not message:
             self.spice = circuit

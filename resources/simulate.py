@@ -10,7 +10,6 @@ class StaticSimulator(Resource):
         circuit_json = request.get_json()  # circuit elements
         circuit_json["name"] = name  # the item name is not in the request body, instead, it is in the url
 
-        print(circuit_json)
         simulator = Simulator(circuit_json)
         output = simulator.define_circuit()
         if output:
