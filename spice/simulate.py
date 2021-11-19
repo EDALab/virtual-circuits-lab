@@ -84,7 +84,6 @@ class Simulator:
         libraries_path = os.path.join(examples_root, 'libraries')
 
         spice_library = SpiceLibrary(libraries_path)
-
         # return message
         message = ""
 
