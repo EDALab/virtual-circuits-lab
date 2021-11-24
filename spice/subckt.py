@@ -16,7 +16,7 @@ class SubCkt(SubCircuit):
 
     # Change constructor to take in name as parameter
     # Remove line 15 that searches for components. Components will now be directly passed in as a value to the constructor
-    def __init__(self, subcircuit_name, subcircuit_components):
+    def __init__(self, subcircuit_name, subcircuit_components, circuit):
         self.__name__ = subcircuit_name
         # Get components that make up subcircuit 
         elements = subcircuit_components
@@ -38,60 +38,92 @@ class SubCkt(SubCircuit):
         examples_root = parent_directory_of(python_file)
         libraries_path = os.path.join(examples_root, 'libraries')
 
-        print(f"Libraries path: {libraries_path}")
-
         spice_library = SpiceLibrary(libraries_path)
 
         # build netlist
         for element in elements:
             if element == "R":
                 for resistor in elements["R"]:
-                    self.R(resistor["id"], get_node_label(resistor["node1"]), get_node_label(resistor["node2"]), resistor["value"]@u_Ohm)
+                    self.R(resistor["id"], 
+                        self.gnd if resistor["node1"] == "gnd" else get_node_label(resistor["node1"]), 
+                        self.gnd if resistor["node2"] == "gnd" else get_node_label(resistor["node2"]), 
+                        resistor["value"]@u_Ohm)
 
             elif element == "L":
                 for inductor in elements["L"]:
-                    self.L(inductor["id"], get_node_label(inductor["node1"]), get_node_label(inductor["node2"]), inductor["value"]@u_H)
+                    self.L(inductor["id"],
+                        self.gnd if inductor["node1"] == "gnd" else get_node_label(inductor["node1"]),
+                        self.gnd if inductor["node2"] == "gnd" else get_node_label(inductor["node2"]), 
+                        inductor["value"]@u_H)
 
             elif element == "C":
                 for capacitor in elements["C"]:
-                    self.C(capacitor["id"], get_node_label(capacitor["node1"]), get_node_label(capacitor["node2"]), capacitor["value"]@u_F)
+                    self.C(capacitor["id"], 
+                        self.gnd if capacitor["node1"] == "gnd" else get_node_label(capacitor["node1"]), 
+                        self.gnd if capacitor["node2"] == "gnd" else get_node_label(capacitor["node2"]), 
+                        capacitor["value"]@u_F)
 
             elif element == "D":
                 for diode in elements["D"]:
                     try:
-                        self.include(spice_library[diode["modelType"]])
-                        self.X(diode["id"], diode["modelType"], get_node_label(diode["node1"]), get_node_label(diode["node2"]))
+                        model = str(diode["modelType"]).upper()
+                        circuit.include(spice_library[model])
+                        self.X(diode["id"], model,
+                            self.gnd if diode["node1"] == "gnd" else get_node_label(diode["node1"]),
+                            self.gnd if diode["node2"] == "gnd" else get_node_label(diode["node2"]))
                     except KeyError as e:
                         print(f"Error creating diode element in subcircuit generator: {str(e)}")
 
             elif element == "nBJT":
                 for nBJT in elements["nBJT"]:
                     try:
-                        self.include(spice_library[nBJT["modelType"]])
-                        self.BJT(nBJT["id"], get_node_label(nBJT["node1"]), get_node_label(nBJT["node2"]), get_node_label(nBJT["node3"]), model=nBJT["modelType"])
+                        model = str(nBJT["modelType"]).upper()
+                        circuit.include(spice_library[nBJT["modelType"]])
+                        self.BJT(nBJT["id"],
+                            self.gnd if nBJT["node1"] == "gnd" else get_node_label(nBJT["node1"]), 
+                            self.gnd if nBJT["node2"] == "gnd" else get_node_label(nBJT["node2"]), 
+                            self.gnd if nBJT["node3"] == "gnd" else get_node_label(nBJT["node3"]), 
+                            model=model)
                     except KeyError as e:
                         print(f"Error creating nBJT element in subcircuit generator: {str(e)}")
             
             elif element == "pBJT":
                 for pBJT in elements["pBJT"]:
                     try:
-                        self.include(spice_library[pBJT["modelType"]])
-                        self.BJT(pBJT["id"], get_node_label(pBJT["node3"]), get_node_label(pBJT["node2"]), get_node_label(pBJT["node1"]), model=pBJT["modelType"])
+                        model = str(pBJT["modelType"]).upper()
+                        circuit.include(spice_library[pBJT["modelType"]])
+                        self.BJT(pBJT["id"],
+                            self.gnd if pBJT["node3"] == "gnd" else get_node_label(pBJT["node3"]),
+                            self.gnd if pBJT["node2"] == "gnd" else get_node_label(pBJT["node2"]),
+                            self.gnd if pBJT["node1"] == "gnd" else get_node_label(pBJT["node1"]),
+                            model=model)
                     except KeyError as e:
                         print(f"Error creating pBJT element in subcircuit generator: {str(e)}")
 
             elif element == "NMOS":
                 for nmos in elements["NMOS"]:
                     try:
-                        self.include(spice_library[nmos["modelType"]])
-                        self.MOSFET(nmos["id"], get_node_label(nmos["node4"]), get_node_label(nmos["node2"]), get_node_label(nmos["node3"]), get_node_label(nmos["node1"]), model=nmos["modelType"])
+                        model = str(nmos["modelType"]).upper()
+                        circuit.include(spice_library[nmos["modelType"]])
+                        self.MOSFET(nmos["id"],
+                            self.gnd if nmos["node4"] == "gnd" else get_node_label(nmos["node4"]),
+                            self.gnd if nmos["node2"] == "gnd" else get_node_label(nmos["node2"]),
+                            self.gnd if nmos["node3"] == "gnd" else get_node_label(nmos["node3"]),
+                            self.gnd if nmos["node1"] == "gnd" else get_node_label(nmos["node1"]),
+                            model=model)
                     except KeyError as e:
                         print(f"Error creating nmos element in subcircuit generator: {str(e)}")
 
             elif element == "PMOS":
                 for pmos in elements["PMOS"]:
                     try:
-                        self.include(spice_library[pmos["modelType"]])
-                        self.MOSFET(pmos["id"], get_node_label(pmos["node4"]), get_node_label(pmos["node2"]), get_node_label(pmos["node3"]), get_node_label(pmos["node1"]), model=pmos["modelType"])
+                        model = str(pmos["modelType"]).upper()
+                        circuit.include(spice_library[pmos["modelType"]])
+                        self.MOSFET(pmos["id"],
+                            self.gnd if pmos["node1"] == "gnd" else get_node_label(pmos["node1"]),
+                            self.gnd if pmos["node2"] == "gnd" else get_node_label(pmos["node2"]),
+                            self.gnd if pmos["node3"] == "gnd" else get_node_label(pmos["node3"]),
+                            self.gnd if pmos["node4"] == "gnd" else get_node_label(pmos["node4"]), 
+                            model=model)
                     except KeyError as e:
                         print(f"Error creating pmos element in subcircuit generator: {str(e)}")

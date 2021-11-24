@@ -150,9 +150,10 @@ class Simulator:
             elif element == "D":
                 for diode in circuit_lab["D"]:
                     try:
-                        circuit.include(spice_library[diode["modelType"]])
+                        model = str(diode["modelType"]).upper()
+                        circuit.include(spice_library[model])
                         circuit.X(diode["id"],
-                                  diode["modelType"],
+                                  model,
                                   circuit.gnd if diode["node1"] == "gnd" else diode["node1"],
                                   circuit.gnd if diode["node2"] == "gnd" else diode["node2"])
                     except KeyError as e:
@@ -161,30 +162,33 @@ class Simulator:
             elif element == "nBJT":
                 for nBJT in circuit_lab["nBJT"]:
                     try:
+                        model = str(nBJT["modelType"]).upper()
                         circuit.include(spice_library[nBJT["modelType"]])
                         circuit.BJT(nBJT["id"],
                                     circuit.gnd if nBJT["node1"] == "gnd" else nBJT["node1"],
                                     circuit.gnd if nBJT["node2"] == "gnd" else nBJT["node2"],
                                     circuit.gnd if nBJT["node3"] == "gnd" else nBJT["node3"],
-                                    model=nBJT["modelType"])
+                                    model=model)
                     except KeyError as e:
                         message += " " + str(e)
 
             elif element == "pBJT":
                 for pBJT in circuit_lab["pBJT"]:
                     try:
+                        model = str(pBJT["modelType"]).upper()
                         circuit.include(spice_library[pBJT["modelType"]])
                         circuit.BJT(pBJT["id"],
                                     circuit.gnd if pBJT["node3"] == "gnd" else pBJT["node3"],
                                     circuit.gnd if pBJT["node2"] == "gnd" else pBJT["node2"],
                                     circuit.gnd if pBJT["node1"] == "gnd" else pBJT["node1"],
-                                    model=pBJT["modelType"])
+                                    model=model)
                     except KeyError as e:
                         message += " " + str(e)
 
             elif element == "NMOS":
                 for NMOS in circuit_lab["NMOS"]:
                     try:
+                        model = str(NMOS["modelType"]).upper()
                         circuit.include(spice_library[NMOS["modelType"]])
                         # nodes are: drain, gate, source, bulk
                         circuit.MOSFET(NMOS["id"],
@@ -192,13 +196,14 @@ class Simulator:
                                        circuit.gnd if NMOS["node2"] == "gnd" else NMOS["node2"],
                                        circuit.gnd if NMOS["node3"] == "gnd" else NMOS["node3"],
                                        circuit.gnd if NMOS["node1"] == "gnd" else NMOS["node1"],
-                                       model=NMOS["modelType"])
+                                       model=model)
                     except KeyError as e:
                         message += " " + str(e)
 
             elif element == "PMOS":
                 for PMOS in circuit_lab["PMOS"]:
                     try:
+                        model = str(PMOS["modelType"]).upper()
                         circuit.include(spice_library[PMOS["modelType"]])
                         # nodes are: source, gate, drain, bulk
                         circuit.MOSFET(PMOS["id"],
@@ -206,7 +211,7 @@ class Simulator:
                                        circuit.gnd if PMOS["node2"] == "gnd" else PMOS["node2"],
                                        circuit.gnd if PMOS["node3"] == "gnd" else PMOS["node3"],
                                        circuit.gnd if PMOS["node4"] == "gnd" else PMOS["node4"],
-                                       model=PMOS["modelType"])
+                                       model=model)
                     except KeyError as e:
                         message += " " + str(e)
 
@@ -226,7 +231,7 @@ class Simulator:
                     subckt_temp = subcircuit_templates_collection.find({"subcircuit_name": subckt_name})[0]
                     subckt_components = SubcircuitTemplate.from_dict(subckt_temp).components
                     # Generate netlist using list of components 
-                    subckt_netlist = SubCkt(subckt_name, subckt_components)
+                    subckt_netlist = SubCkt(subckt_name, subckt_components, circuit)
                     # Declare subcircuit netlist to main circuit simulation netlist 
                     circuit.subcircuit(subckt_netlist)
                     
